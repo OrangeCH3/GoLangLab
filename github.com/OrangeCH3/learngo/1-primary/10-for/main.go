@@ -30,7 +30,7 @@ func main() {
 		k++
 	}
 
-	// for range循环
+	// 10-for range循环
 	str := "OrangeCH3"
 	for i, v := range str {
 		fmt.Printf("Index:%d | Value:%c\n", i, v)

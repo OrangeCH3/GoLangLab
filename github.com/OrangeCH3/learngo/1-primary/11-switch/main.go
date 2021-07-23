@@ -9,7 +9,7 @@ package main
 
 import "fmt"
 
-// 用 switch 简化大量的判断
+// 用 11-switch 简化大量的判断
 func main() {
 	finger := 4
 	switch finger {
