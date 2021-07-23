@@ -10,12 +10,12 @@ package main
 import "fmt"
 
 // Go语言中推荐使用驼峰式的命名
-// var studentName 6-string
+// var studentName 06-string
 
 // 声明变量
-// var name 6-string
+// var name 06-string
 // var age int
-// var isOk 7-bool
+// var isOk 07-bool
 
 // 批量声明变量
 var (
