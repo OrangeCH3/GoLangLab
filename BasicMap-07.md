@@ -223,10 +223,12 @@ func main() {
 	}
 	fmt.Println("after init")
 	// 对切片中的map元素进行初始化
-	mapSlice[0] = make(map[string]string, 10)
+	mapSlice[0] = make(map[string]string, 1)
+	mapSlice[1] = make(map[string]string, 1)
+	mapSlice[2] = make(map[string]string, 1)
 	mapSlice[0]["name"] = "OrangeCH3"
-	mapSlice[0]["password"] = "123456"
-	mapSlice[0]["address"] = "Earth"
+	mapSlice[1]["password"] = "123456"
+	mapSlice[2]["address"] = "Earth"
 	for index, value := range mapSlice {
 		fmt.Printf("index:%d value:%v\n", index, value)
 	}
