@@ -170,9 +170,9 @@ func main() {
 	fmt.Println(ret7) //30
 
 	// 函数作为返回值的调用
-	//funcS, _ := do("+")
-	//ret8 := funcS(1,6)
-	//print(ret8)
+	funcS, _ := do("+")
+	ret8 := funcS(1, 6)
+	print(ret8)
 
 	// 闭包函数的调用
 	jpgFunc := makeSuffixFunc(".jpg")
