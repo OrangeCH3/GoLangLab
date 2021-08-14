@@ -153,6 +153,130 @@ func calc(x, y int) (int, int) {
 }
 ```
 
+### 返回值命名
+
+函数定义时可以给返回值命名，并在函数体中直接使用这些变量，最后通过`return`关键字返回。
+
+例如：
+
+```go
+package main
+
+func calc(x, y int) (sum, sub int) {
+	sum = x + y
+	sub = x - y
+	return
+}
+```
+
+### 返回值补充
+
+当我们的一个函数返回值类型为slice时，nil可以看做是一个有效的slice，没必要显示返回一个长度为0的切片。
+
+```go
+package main
+
+import "strconv"
+
+func someFunc(x string) []int {
+	if x == "" {
+		return nil // 没必要返回[]int{}
+	} else if v, err := strconv.Atoi(x); err == nil {
+		return []int{v}
+	} else {
+		return []int{0}
+    }
+    
+}
+```
+
+## 变量作用域
+
+### 全局变量
+
+全局变量是定义在函数外部的变量，它在程序整个运行周期内都有效。 在函数中可以访问到全局变量。
+
+```go
+package main
+
+import "fmt"
+
+//定义全局变量num
+var num int64 = 10
+
+func testGlobalVar() {
+	fmt.Printf("num=%d\n", num) //函数中可以访问全局变量num
+}
+func main() {
+	testGlobalVar() //num=10
+}
+```
+
+### 局部变量
+
+局部变量又分为两种： 函数内定义的变量无法在该函数外使用，例如下面的示例代码`main`函数中无法使用`testLocalVar`函数中定义的变量`x`：
+
+```go
+package main
+
+import "fmt"
+
+func testLocalVar() {
+	//定义一个函数局部变量x,仅在该函数内生效
+	var x int64 = 100
+	fmt.Printf("x=%d\n", x)
+}
+
+func main() {
+	testLocalVar()
+	// fmt.Println(x) // 此时无法使用变量x
+}
+```
+
+如果局部变量和全局变量重名，优先访问局部变量。
+
+```go
+package main
+
+import "fmt"
+
+//定义全局变量num
+var num int64 = 10
+
+func testNum() {
+	// num := 100
+	fmt.Printf("num=%d\n", num) // 函数中优先使用局部变量
+}
+func main() {
+	testNum() // num=100
+}
+```
+
+接下来我们来看一下语句块定义的变量，通常我们会在`if条件判断`、`for循环`、`switch语句`上使用这种定义变量的方式。
+
+```go
+package main
+
+import "fmt"
+
+func testLocalVar2(x, y int) {
+	fmt.Println(x, y) //函数的参数也是只在本函数中生效
+	if x > 0 {
+		z := 100 //变量z只在if语句块生效
+		fmt.Println(z)
+	}
+	//fmt.Println(z)//此处无法使用变量z
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 
