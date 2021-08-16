@@ -165,14 +165,156 @@ func main() {
 }
 ```
 
+### 创建指针类型结构体
 
+我们还可以通过使用`new关键字`对结构体进行实例化，得到的是结构体的地址。 格式如下：
 
+```cgo
+var p2 = new(person)
+fmt.Printf("%T\n", p2)     //*main.person
+fmt.Printf("p2=%#v\n", p2) //p2=&main.person{name:"", city:"", age:0}
+```
 
+从打印的结果中我们可以看出`p2`是一个结构体指针。
 
+需要注意的是在Go语言中支持对结构体指针直接使用`.`来访问结构体的成员。
 
+```cgo
+var p2 = new(person)
+p2.name = "小王子"
+p2.age = 28
+p2.city = "上海"
+fmt.Printf("p2=%#v\n", p2) //p2=&main.person{name:"小王子", city:"上海", age:28}
+```
 
+### 取结构体的地址实例化
 
+使用`&`对结构体进行取地址操作相当于对该结构体类型进行了一次`new`实例化操作。
 
+```go
+package main
+
+import "fmt"
+
+type person struct {
+	name string
+	city string
+	age  int8
+}
+
+func main()  {
+	p3 := &person{}
+	fmt.Printf("%T\n", p3)     //*main.person
+	fmt.Printf("p3=%#v\n", p3) //p3=&main.person{name:"", city:"", age:0}
+	p3.name = "七米"
+	p3.age = 30
+	p3.city = "成都"
+	fmt.Printf("p3=%#v\n", p3) //p3=&main.person{name:"七米", city:"成都", age:30}
+}
+```
+
+`p3.name = "七米"`其实在底层是`(*p3).name = "七米"`，这是Go语言帮我们实现的语法糖。
+
+## 结构体初始化
+
+没有初始化的结构体，其成员变量都是对应其类型的零值。
+
+```go
+package main
+
+import "fmt"
+
+type person struct {
+	name string
+	city string
+	age  int8
+}
+
+func main() {
+	var p4 person
+	fmt.Printf("p4=%#v\n", p4) //p4=main.person{name:"", city:"", age:0}
+}
+```
+
+### 使用键值对初始化
+
+使用键值对对结构体进行初始化时，键对应结构体的字段，值对应该字段的初始值。
+
+```go
+package main
+
+import "fmt"
+
+type person struct {
+	name string
+	city string
+	age  int8
+}
+
+func main()  {
+	p5 := person{
+		name: "小王子",
+		city: "北京",
+		age:  18,
+	}
+	fmt.Printf("p5=%#v\n", p5) //p5=main.person{name:"小王子", city:"北京", age:18}
+}
+```
+
+也可以对结构体指针进行键值对初始化，例如：
+
+```go
+package main
+
+import "fmt"
+
+type person struct {
+	name string
+	city string
+	age  int8
+}
+
+func main()  {
+	p6 := &person{
+		name: "小王子",
+		city: "北京",
+		age:  18,
+	}
+	fmt.Printf("p6=%#v\n", p6) //p6=&main.person{name:"小王子", city:"北京", age:18}
+}
+```
+
+当某些字段没有初始值的时候，该字段可以不写。此时，没有指定初始值的字段的值就是该字段类型的零值。
+
+```cgo
+p7 := &person{
+	city: "北京",
+}
+fmt.Printf("p7=%#v\n", p7) //p7=&main.person{name:"", city:"北京", age:0}
+```
+
+### 使用值的列表初始化
+
+初始化结构体的时候可以简写，也就是初始化的时候不写键，直接写值：
+
+```cgo
+p8 := &person{
+	"OrangeCH3",
+	"北京",
+	28,
+}
+fmt.Printf("p8=%#v\n", p8) //p8=&main.person{name:"OrangeCH3", city:"北京", age:28}
+```
+
+使用这种格式初始化时，需要注意：
+
+1. 必须初始化结构体的所有字段。
+2. 初始值的填充顺序必须与字段在结构体中的声明顺序一致。
+3. 该方式不能和键值初始化方式混用。
+
+## 结构体内存布局
+
+结构体占用一块连续的内存。
 
 
 
