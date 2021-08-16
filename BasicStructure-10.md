@@ -613,9 +613,186 @@ func main() {
 }
 ```
 
-## 
+## 结构体的“继承”
 
+Go语言中使用结构体也可以实现其他编程语言中面向对象的继承。
 
+```go
+package main
 
+import "fmt"
 
+//Animal 动物
+type Animal struct {
+	name string
+}
 
+func (a *Animal) move() {
+	fmt.Printf("%s会动！\n", a.name)
+}
+
+//Dog 狗
+type Dog struct {
+	Feet    int8
+	*Animal //通过嵌套匿名结构体实现继承
+}
+
+func (d *Dog) wang() {
+	fmt.Printf("%s会汪汪汪~\n", d.name)
+}
+
+func main() {
+	d1 := &Dog{
+		Feet: 4,
+		Animal: &Animal{ //注意嵌套的是结构体指针
+			name: "乐乐",
+		},
+	}
+	d1.wang() //乐乐会汪汪汪~
+	d1.move() //乐乐会动！
+}
+```
+
+## 结构体字段的可见性
+
+结构体中字段`大写开头表示可公开访问`，`小写表示私有`（仅在定义当前结构体的包中可访问）。
+
+## 结构体与 JSON 序列化
+
+JSON(JavaScript Object Notation) 是一种轻量级的数据交换格式。易于人阅读和编写。同时也易于机器解析和生成。JSON键值对是用来保存JS对象的一种方式，键/值对组合中的键名写在前面并用双引号`""`包裹，使用冒号`:`分隔，然后紧接着值；多个键值之间使用英文`,`分隔。
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+//Student 学生
+type Student struct {
+	ID     int
+	Gender string
+	Name   string
+}
+
+//Class 班级
+type Class struct {
+	Title    string
+	Students []*Student
+}
+
+func main() {
+	c := &Class{
+		Title:    "101",
+		Students: make([]*Student, 0, 200),
+	}
+	for i := 0; i < 10; i++ {
+		stu := &Student{
+			Name:   fmt.Sprintf("stu%02d", i),
+			Gender: "男",
+			ID:     i,
+		}
+		c.Students = append(c.Students, stu)
+	}
+	//JSON序列化：结构体-->JSON格式的字符串
+	data, err := json.Marshal(c)
+	if err != nil {
+		fmt.Println("json marshal failed")
+		return
+	}
+	fmt.Printf("json:%s\n", data)
+	//JSON反序列化：JSON格式的字符串-->结构体
+	str := `{"Title":"101","Students":[{"ID":0,"Gender":"男","Name":"stu00"},{"ID":1,"Gender":"男","Name":"stu01"},{"ID":2,"Gender":"男","Name":"stu02"},{"ID":3,"Gender":"男","Name":"stu03"},{"ID":4,"Gender":"男","Name":"stu04"},{"ID":5,"Gender":"男","Name":"stu05"},{"ID":6,"Gender":"男","Name":"stu06"},{"ID":7,"Gender":"男","Name":"stu07"},{"ID":8,"Gender":"男","Name":"stu08"},{"ID":9,"Gender":"男","Name":"stu09"}]}`
+	c1 := &Class{}
+	err = json.Unmarshal([]byte(str), c1)
+	if err != nil {
+		fmt.Println("json unmarshal failed!")
+		return
+	}
+	fmt.Printf("%#v\n", c1)
+}
+```
+
+## 结构体标签（Tag）
+
+`Tag`是结构体的元信息，可以在运行的时候通过反射的机制读取出来。 `Tag`在结构体字段的后方定义，由一对`反引号`包裹起来，具体的格式如下：
+
+```cgo
+`key1:"value1" key2:"value2"`
+```
+
+结构体tag由一个或多个键值对组成。键与值使用冒号分隔，值用双引号括起来。同一个结构体字段可以设置多个键值对tag，不同的键值对之间使用空格分隔。
+
+**注意事项**： 为结构体编写`Tag`时，必须严格遵守键值对的规则。结构体标签的解析代码的容错能力很差，一旦格式写错，编译和运行时都不会提示任何错误，通过反射也无法正确取值。例如不要在key和value之间添加空格。
+
+例如我们为`Student`结构体的每个字段定义json序列化时使用的Tag：
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+//Student 学生
+type Student struct {
+	ID     int    `json:"id"` //通过指定tag实现json序列化该字段时的key
+	Gender string //json序列化是默认使用字段名作为key
+	name   string //私有不能被json包访问
+}
+
+func main() {
+	s1 := Student{
+		ID:     1,
+		Gender: "男",
+		name:   "沙河娜扎",
+	}
+	data, err := json.Marshal(s1)
+	if err != nil {
+		fmt.Println("json marshal failed!")
+		return
+	}
+	fmt.Printf("json str:%s\n", data) //json str:{"id":1,"Gender":"男"}
+}
+```
+
+## 结构体和方法补充知识点
+
+因为`slice`和`map`这两种数据类型都包含了指向底层数据的指针，因此我们在需要复制它们时要特别注意。我们来看下面的例子：
+
+```go
+package main
+
+import "fmt"
+
+type Person struct {
+	name   string
+	age    int8
+	dreams []string
+}
+
+// 此种定义方式不对
+//func (p *Person) SetDreams(dreams []string) {
+//	p.dreams = dreams
+//}
+
+// SetDreams 使用下面的方式
+// 在方法中使用传入的slice的拷贝进行结构体赋值。
+func (p *Person) SetDreams(dreams []string) {
+	p.dreams = make([]string, len(dreams))
+	copy(p.dreams, dreams)
+}
+
+func main() {
+	p1 := Person{name: "小王子", age: 18}
+	data := []string{"吃饭", "睡觉", "打豆豆"}
+	p1.SetDreams(data)
+
+	// 你真的想要修改 p1.dreams 吗？
+	data[1] = "不睡觉"
+	fmt.Println(p1.dreams) // ?
+}
+```
+
+同样的问题也存在于返回值`slice`和`map`的情况，在实际编码过程中一定要注意这个问题。
