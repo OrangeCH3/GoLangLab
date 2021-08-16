@@ -316,6 +316,59 @@ fmt.Printf("p8=%#v\n", p8) //p8=&main.person{name:"OrangeCH3", city:"北京", ag
 
 结构体占用一块连续的内存。
 
+```go
+package main
+
+import "fmt"
+
+func main()  {
+	type test struct {
+		a int8
+		b int8
+		c int8
+		d int8
+	}
+	n := test{
+		1, 2, 3, 4,
+	}
+	fmt.Printf("n.a %p\n", &n.a)
+	fmt.Printf("n.b %p\n", &n.b)
+	fmt.Printf("n.c %p\n", &n.c)
+	fmt.Printf("n.d %p\n", &n.d)
+}
+```
+
+输出：
+
+```cgo
+n.a 0xc0000a0060
+n.b 0xc0000a0061
+n.c 0xc0000a0062
+n.d 0xc0000a0063
+```
+
+### 空结构体
+
+空结构体是不占用空间的。
+
+```cgo
+var v struct{}
+fmt.Println(unsafe.Sizeof(v))  // 0
+```
+
+## 构造函数
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
