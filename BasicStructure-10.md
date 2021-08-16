@@ -551,4 +551,71 @@ func main() {
 
 **注意事项**： 非本地类型不能定义方法，也就是说我们不能给别的包的类型定义方法。
 
+## 结构体的匿名字段
+
+结构体允许其成员字段在声明时没有字段名而只有类型，这种没有名字的字段就称为匿名字段。
+
+```go
+package main
+
+import "fmt"
+
+//Person 结构体Person类型
+type Person struct {
+	string
+	int
+}
+
+func main() {
+	p1 := Person{
+		"小王子",
+		18,
+	}
+	fmt.Printf("%#v\n", p1)        //main.Person{string:"北京", int:18}
+	fmt.Println(p1.string, p1.int) //北京 18
+}
+```
+
+**注意**：这里匿名字段的说法并不代表没有字段名，而是默认会采用类型名作为字段名，结构体要求字段名称必须唯一，因此一个结构体中同种类型的匿名字段只能有一个。
+
+## 嵌套结构体
+
+一个结构体中可以嵌套包含另一个结构体或结构体指针，就像下面的示例代码那样。
+
+```go
+package main
+
+import "fmt"
+
+//Address 地址结构体
+type Address struct {
+	Province string
+	City     string
+}
+
+//User 用户结构体
+type User struct {
+	Name    string
+	Gender  string
+	Address Address
+}
+
+func main() {
+	user1 := User{
+		Name:   "小王子",
+		Gender: "男",
+		Address: Address{
+			Province: "山东",
+			City:     "威海",
+		},
+	}
+	fmt.Printf("user1=%#v\n", user1)//user1=main.User{Name:"小王子", Gender:"男", Address:main.Address{Province:"山东", City:"威海"}}
+}
+```
+
+## 
+
+
+
+
 
