@@ -3,7 +3,12 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="GoBoolExpressions" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="GoNilness" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="GoUnusedConst" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="GoUnusedExportedFunction" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="GoUnusedExportedType" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="GoUnusedFunction" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="GoUnusedGlobalVariable" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="GoUnusedParameter" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="GoUnusedType" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="JSDuplicateCaseLabel" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="MarkdownUnresolvedFileReference" enabled="false" level="WARNING" enabled_by_default="false" />
