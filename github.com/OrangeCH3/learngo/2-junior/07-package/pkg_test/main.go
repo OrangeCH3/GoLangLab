@@ -9,6 +9,7 @@ package pkg2
 
 import "fmt"
 
+// 导入的包会最先初始化并调用其init()函数
 func init() {
 	fmt.Println("This is pkg_test init() function!")
 }
