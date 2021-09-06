@@ -95,4 +95,5 @@ func main() {
 		return
 	}
 	fmt.Printf("扫描结果 name:%s age:%d married:%t \n", named, aged, married)
+
 }
