@@ -186,10 +186,6 @@ func main() {
 
 将上面的代码编译成`client`或`client.exe`可执行文件，先启动server端再启动client端，在client端输入任意内容回车之后就能够在server端看到client端发送的数据，从而实现TCP通信。
 
-<video id="video" controls="" preload="none">
-      <source id="mp4" src="./material/Go实现TCP通信.mp4" type="video/mp4">
-</video>
-
 ## TCP 黏包
 
 ### 黏包示例
