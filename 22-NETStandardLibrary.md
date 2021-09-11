@@ -275,7 +275,11 @@ import (
 // http server
 
 func sayHello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Hello, OrangeCH3!")
+	_, err := fmt.Fprintln(w, "Hello, OrangeCH3!")
+	if err != nil {
+		fmt.Println(err)
+		return 
+	}
 }
 
 func main() {
